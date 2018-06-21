@@ -1,0 +1,9 @@
+# local_settings.template
+# 
+# replace *HERE with appropriate values for your Sierra host, api key, and api secret
+# save this file as local_settings.cfg
+#
+[sierra]
+SIERRA_API_HOST = https://HOSTNAMEHERE
+SIERRA_API_KEY = APIKEYHERE
+SIERRA_API_KEY_SECRET = APISECRETHERE
