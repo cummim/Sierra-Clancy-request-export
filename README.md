@@ -6,6 +6,8 @@ These scripts may be used as a two part process to identify Sierra items request
 * Part 1: getOffsiteRequests.py generates a JSON file with hyperlinks referencing Sierra item ids
 * Part 2: getItemBarcodes.py generates a pipe-delimited text file containing barcodes for the items
 
+The complete setup would be to create a cron job that calls these scripts, and then executes a system command to submit the file of barcodes to Caiasoft via their API. 
+
 <b>Usage: </b>
 <pre>
 $ python getOffsiteRequests.py
