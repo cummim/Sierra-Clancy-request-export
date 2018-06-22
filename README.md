@@ -17,9 +17,10 @@ $ python getItemBarcodes.py JSONfilename
 * Submit the resulting file of barcodes to Caiasoft via their API
 
 <b>To re-use this code</b>
-* Download the two python scripts and local_config.template, 
-* Rename the local_config.template local_config.cfg and add the Sierra host name, API key, and API secret.
-* Edit file name prefixes appropriate for your institution
+* Download the two python scripts and local_config.template 
+* Rename the local_config.template as local_config.cfg and insert valid entries for Sierra Host Name, API Key, and API Secret.
+* Edit in code file name prefixes in getItemBarcodes.py so they are appropriate for your institution
+* Change the location id number in the JSON query section of getOffsiteRequests.py to match the desired location
   
   
 Sierra is an integrated library system from Innovative Interfaces.
