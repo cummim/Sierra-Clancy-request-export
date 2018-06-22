@@ -20,13 +20,10 @@ from requests import Request, Session
 from datetime import date
 
 hold_date = str(date.today())
-	
 
-#######################
-##
-## Read config file
-##
-#######################
+# ------------------------
+# Read config file
+# ------------------------
 
 from ConfigParser import SafeConfigParser
 parser = SafeConfigParser()
@@ -61,9 +58,9 @@ request_headers = {'Accept': 'application/json', 'Authorization': 'Bearer ' + ac
 ## Create URL for items endpoint
 items_url = SIERRA_API_HOST + ITEMS_URI 
 
-# 
+# ------------------------
 # Create JSON query
-
+# ------------------------
 payload = {
   "queries": [
     {
@@ -101,11 +98,9 @@ payload = {
 }
 
 
-#######################
-##
-## Submit the query
-##
-#######################
+# ------------------------
+# Submit the query
+# ------------------------
 
 items_response = requests.post(items_url, headers=request_headers, json=payload)
 
@@ -113,11 +108,12 @@ items_response = requests.post(items_url, headers=request_headers, json=payload)
 print "RESPONSE CODE: ", items_response.status_code # Print to stdout
 print ' '
 print "Total results: " + str(items_response.json()['total'])
-# itemlist = items_response.text
+
 itemlist = json.dumps(items_response.json(),indent=4)
 
-## End part one. Save list of links to Sierra items in a file.
-##
+# ------------------------------------------------------------
+# End part one. Save list of links to Sierra items in a file.
+# ------------------------------------------------------------
 f = open('items-'+hold_date, 'w')
 f.write(itemlist)
 f.close()
