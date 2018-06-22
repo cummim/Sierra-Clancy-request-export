@@ -4,7 +4,7 @@
 #			Thomas J. Watson Library, The Metropolitan Museum of Art
 #			June, 2018
 #	Requirements:	Requires Sierra host, api key, and api secret loaded from a local configuration file.
-#	Description:    This is Part 1. The script looks up the barcodes for the items in a JSON file that were saved from Part 1.
+#	Description:    This is Part 2. The script looks up the barcodes for the items in a JSON file that were saved from Part 1.
 #			It saves the barcodes in a pipe-delimited text file.
 #	Usage e.g.,:	python getItemBarcodes.py name-of-file-with-items
 #	Notes:		This script uses the Sierra items REST API. The API response is a JSON item object with barcode number.
