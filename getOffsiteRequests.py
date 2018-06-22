@@ -7,7 +7,7 @@
 #	Description:    Script passes a JSON query for hold requests placed on items in location offsite where
 #			hold creation date equals today. Item location is Sierra item field 79; location 
 #			offsite is code 'off'. Item hold creation date is item field 8003.
-#	Usage e.g.,:	python getItems.py 
+#	Usage e.g.,:	python getOffsiteRequests.py 
 #			Run this script just before midnight to pickup all requests for the same day.
 #	Notes:		This script uses the Sierra items REST API. The API response is a set of links
 #			to Sierra items. 
