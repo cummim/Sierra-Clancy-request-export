@@ -1,6 +1,6 @@
 # Sierra-Clancy-request-export
 
-These scripts may be used as a two part process to identify Sierra items requested from offsite repository (Clancy) and create a file containing item barcodes for submission to the Caiasoft API.  
+These scripts may be used as a two part process using Sierra APIs to identify items requested from off site repository (Clancy) and create a file containing item barcodes for submission to the Caiasoft API.  
 
 <b>Parts</b>
 * Part 1: getOffsiteRequests.py generates a JSON file with hyperlinks referencing Sierra item ids
