@@ -30,7 +30,7 @@ hold_date = str(date.today())
 
 from ConfigParser import SafeConfigParser
 parser = SafeConfigParser()
-parser.read('local_config.cfg')
+parser.read('/home/ubuntu/projects/clancy/local_config.cfg')
 
 SIERRA_API_HOST = parser.get('sierra', 'SIERRA_API_HOST')
 SIERRA_API_KEY = parser.get('sierra', 'SIERRA_API_KEY')
@@ -118,6 +118,6 @@ itemlist = json.dumps(items_response.json(),indent=4)
 
 ## End part one. Save list of links to Sierra items in a file.
 ##
-f = open('items-'+hold_date, 'w')
+f = open('/home/ubuntu/projects/clancy/items-'+hold_date, 'w')
 f.write(itemlist)
 f.close()
