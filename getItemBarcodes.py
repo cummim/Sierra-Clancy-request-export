@@ -6,7 +6,8 @@
 #	Requirements:	Requires Sierra host, api key, and api secret loaded from a local configuration file.
 #	Description:    This is Part 1. The script looks up the barcodes for the items in a JSON file that were saved from Part 1.
 #			It saves the barcodes in a pipe-delimited text file.
-#	Usage e.g.,:	python getItemBarcodes.py name-of-file-with-items
+#	Usage e.g.,:	python getItemBarcodes.py fully-qualified-name-of-file-with-JSON-items  AM|PM
+#			
 #	Notes:		This script uses the Sierra items REST API. The API response is a JSON item object with barcode number.
 #			This script parses the response and saves all of the barcodes in a pip-delimited text file. 
 #			The file may be submitted to Caiasoft using their API
@@ -15,6 +16,7 @@ import requests
 import base64
 import sys
 from requests import Request, Session
+from datetime import date
 
 #--------------------------------------------
 # function to pull id off hyperlink
@@ -32,7 +34,7 @@ def pluckId( str ):
 
 from ConfigParser import SafeConfigParser
 parser = SafeConfigParser()
-parser.read('local_config.cfg')
+parser.read('/home/ubuntu/projects/clancy/local_config.cfg')
 
 SIERRA_API_HOST = parser.get('sierra', 'SIERRA_API_HOST')
 SIERRA_API_KEY = parser.get('sierra', 'SIERRA_API_KEY')
@@ -42,8 +44,11 @@ AUTH_URI = '/iii/sierra-api/v5/token'
 VALIDATE_URI = '/iii/sierra-api/v5/items/validate'
 ITEMS_URI = '/iii/sierra-api/v5/items/'
 
-requestBarcodes = "MMA-WATSON|" + sys.argv[1] +"|"
-outputFile = "requests/MMA-WATSON-REQ-" + sys.argv[1] + ".txt"
+hold_date = str(date.today())
+
+# Cron requires full paths 
+morningFile 	= parser.get('filepaths', 'MORNING_REQUESTS_FILE')+hold_date+".txt"
+eveningFile 	= parser.get('filepaths', 'EVENING_REQUESTS_FILE')+hold_date+".txt"
 itemid = ''
 
 #-----------------------------------------------
@@ -101,16 +106,27 @@ for hyperlink in link_file_contents['entries']:
 	responseData= json.loads(responseStr)
 	
 	#-------------------------------------------------------------------
-	# Select the barcode value; append to running pipe-delimited string
+	# For the AM request, retrieve and save ALL request barcodes
 	#-------------------------------------------------------------------
-	
-	for holdrequest in responseData['entries']:
-		# APPEND TO STRING OF BARCODES
-		requestBarcodes += holdrequest['barcode'] + "|"
+	if sys.argv[2] == "AM":
+		with open(morningFile,'a') as f:
+			for holdrequest in responseData['entries']:
+				# APPEND TO STRING OF BARCODES
+				f.write(holdrequest['barcode'] + "\n")
+	else:
+		#-------------------------------------------------------------------
+		# For the PM request, retrieve and save unmatched request barcodes
+		# from the AM processing
+		#-------------------------------------------------------------------
+		
+		with open(morningFile,'r') as m:
+			AMbarcodes = m.read()
+			for holdrequest in responseData['entries']:
+				if holdrequest['barcode'] in AMbarcodes:
+					print ("Found barcode from AM. Skipping: "+holdrequest['barcode'])
+				else:
+					with open(eveningFile,'a') as f:
+						print ("Found new barcode. Saving in PM group: "+holdrequest['barcode'])
+						f.write(holdrequest['barcode'] + "\n")
 
-#--------------------------------------
-# Save the requested barcodes in a file
-#--------------------------------------
-with open(outputFile,'w') as f:
-	f.write(requestBarcodes)
-print("Done. File written: " + outputFile)
+print("Done ")
