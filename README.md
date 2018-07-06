@@ -11,16 +11,21 @@ The complete setup would be to create a cron job that calls these scripts, and t
 <b>Usage: </b>
 <pre>
 $ python getOffsiteRequests.py
-$ python getItemBarcodes.py JSONfilename
+$ python getItemBarcodes.py JSONfilename AM|PM
 </pre>
-* Run this at the end of the day to capture all requests for that day. 
+* Run these at some point during the day and again at the end of the day to capture all requests for that day. 
 * Submit the resulting file of barcodes to Caiasoft via their API
 
 <b>To re-use this code</b>
 * Download the two python scripts and local_config.template 
-* Rename the local_config.template as local_config.cfg and insert valid entries for Sierra Host Name, API Key, and API Secret.
-* Edit in code file name prefixes in getItemBarcodes.py so they are appropriate for your institution
+* Rename the local_config.template as local_config.cfg 
+* Edit local_config.cfg:
+* ... insert valid entries for [sierra] stanza: Sierra Host Name, API Key, and API_SECRET
+* ... insert valid paths in [filepaths] stanza. Change institution prefix as appropriate.
+* Edit the path to local_config.cfg in getItemBarcodes.py and getOffsiteRequests.py
 * Change the location id number in the JSON query section of getOffsiteRequests.py to match the desired location
   
-  
-Sierra is an integrated library system from Innovative Interfaces.
+Full paths are stored in a config file to accommodate running the shell scripts that invoke these Python script as cron tasks. Shell scripts, logging, file management, and the Caiasoft API are outside the scope of this repository.
+
+Sierra is an integrated library system from Innovative Interfaces. (https://www.iii.com/)
+Caiasoft is an off-site inventory management system (http://www.caia-solutions.com/?serv=caiasoft)
