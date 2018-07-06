@@ -4,7 +4,7 @@ These scripts may be used as a two part process using Sierra APIs to identify it
 
 <b>Parts</b>
 * Part 1: getOffsiteRequests.py generates a JSON file with hyperlinks referencing Sierra item ids
-* Part 2: getItemBarcodes.py generates a pipe-delimited text file containing barcodes for the items
+* Part 2: getItemBarcodes.py generates a text file containing barcodes for the items
 
 The complete setup would be to create a cron job that calls these scripts, and then executes a system command to submit the file of barcodes to Caiasoft via their API. 
 
@@ -25,7 +25,7 @@ $ python getItemBarcodes.py JSONfilename AM|PM
 * Edit the path to local_config.cfg in getItemBarcodes.py and getOffsiteRequests.py
 * Change the location id number in the JSON query section of getOffsiteRequests.py to match the desired location
   
-Full paths are stored in a config file to accommodate running the shell scripts that invoke these Python script as cron tasks. Shell scripts, logging, file management, and the Caiasoft API are outside the scope of this repository.
+Full paths are stored in a config file to accommodate running the shell scripts that invoke these Python scripts as cron tasks. Shell scripts, logging, file management, and the Caiasoft API are outside the scope of this repository.
 
 Sierra is an integrated library system from Innovative Interfaces. (https://www.iii.com/)
 Caiasoft is an off-site inventory management system (http://www.caia-solutions.com/?serv=caiasoft)
