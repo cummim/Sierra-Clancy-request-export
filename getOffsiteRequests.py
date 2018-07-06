@@ -20,18 +20,22 @@ from requests import Request, Session
 from datetime import date
 
 hold_date = str(date.today())
+	
 
-# ------------------------
-# Read config file
-# ------------------------
-
+#######################
+##
+## Read config file
+##
+#######################
 from ConfigParser import SafeConfigParser
 parser = SafeConfigParser()
-parser.read('/home/ubuntu/projects/clancy/local_config.cfg')
+parser.read('/home/helper/local_config.cfg')
 
 SIERRA_API_HOST = parser.get('sierra', 'SIERRA_API_HOST')
 SIERRA_API_KEY = parser.get('sierra', 'SIERRA_API_KEY')
 SIERRA_API_KEY_SECRET = parser.get('sierra', 'SIERRA_API_KEY_SECRET')
+
+ITEMS_JSON_PREFIX = parser.get('filepaths', 'ITEMS_JSON_PREFIX')
 
 AUTH_URI = '/iii/sierra-api/v5/token'
 VALIDATE_URI = '/iii/sierra-api/v5/items/validate'
@@ -58,9 +62,9 @@ request_headers = {'Accept': 'application/json', 'Authorization': 'Bearer ' + ac
 ## Create URL for items endpoint
 items_url = SIERRA_API_HOST + ITEMS_URI 
 
-# ------------------------
+# 
 # Create JSON query
-# ------------------------
+
 payload = {
   "queries": [
     {
@@ -98,23 +102,24 @@ payload = {
 }
 
 
-# ------------------------
-# Submit the query
-# ------------------------
+#######################
+##
+## Submit the query
+##
+#######################
 
 items_response = requests.post(items_url, headers=request_headers, json=payload)
 
-#print '********** RESPONSE ',items_url 
-print "RESPONSE CODE: ", items_response.status_code # Print to stdout
-print ' '
-print "Total results: " + str(items_response.json()['total'])
-
+# print '********** RESPONSE ',items_url 
+# print "RESPONSE CODE: ", items_response.status_code # Print to stdout
+# print ' '
+# print "Total results: " + str(items_response.json()['total'])
+# itemlist = items_response.text
 itemlist = json.dumps(items_response.json(),indent=4)
 
-
-# ------------------------------------------------------------
-# End part one. Save list of links to Sierra items in a file.
-# ------------------------------------------------------------
-f = open('/home/ubuntu/projects/clancy/items-'+hold_date, 'w')
+## End part one. Save list of links to Sierra items in a file.
+##
+#f = open('/home/ubuntu/projects/clancy/items-'+hold_date, 'w')
+f = open(ITEMS_JSON_PREFIX + hold_date, 'w')
 f.write(itemlist)
 f.close()
