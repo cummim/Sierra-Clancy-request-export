@@ -4,7 +4,7 @@
 #			Thomas J. Watson Library, The Metropolitan Museum of Art
 #			June, 2018
 #	Requirements:	Requires Sierra host, api key, and api secret loaded from a local configuration file.
-#	Description:    This is Part 2. The script looks up the barcodes for the items in a JSON file that were saved from Part 1.
+#	Description:    This is Part 1. The script looks up the barcodes for the items in a JSON file that were saved from Part 1.
 #			It saves the barcodes in a pipe-delimited text file.
 #	Usage e.g.,:	python getItemBarcodes.py fully-qualified-name-of-file-with-JSON-items  AM|PM
 #			
@@ -34,7 +34,7 @@ def pluckId( str ):
 
 from ConfigParser import SafeConfigParser
 parser = SafeConfigParser()
-parser.read('/home/ubuntu/projects/clancy/local_config.cfg')
+parser.read('/home/helper/local_config.cfg')
 
 SIERRA_API_HOST = parser.get('sierra', 'SIERRA_API_HOST')
 SIERRA_API_KEY = parser.get('sierra', 'SIERRA_API_KEY')
@@ -123,10 +123,11 @@ for hyperlink in link_file_contents['entries']:
 			AMbarcodes = m.read()
 			for holdrequest in responseData['entries']:
 				if holdrequest['barcode'] in AMbarcodes:
-					print ("Found barcode from AM. Skipping: "+holdrequest['barcode'])
+					# print ("Found barcode from AM. Skipping: "+holdrequest['barcode'])
+					found_duplicate = 'yep'
 				else:
 					with open(eveningFile,'a') as f:
-						print ("Found new barcode. Saving in PM group: "+holdrequest['barcode'])
+						# print ("Found new barcode. Saving in PM group: "+holdrequest['barcode'])
 						f.write(holdrequest['barcode'] + "\n")
 
 print("Done ")
