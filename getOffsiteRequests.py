@@ -119,7 +119,7 @@ itemlist = json.dumps(items_response.json(),indent=4)
 
 ## End part one. Save list of links to Sierra items in a file.
 ##
-#f = open('/home/ubuntu/projects/clancy/items-'+hold_date, 'w')
+
 f = open(ITEMS_JSON_PREFIX + hold_date, 'w')
 f.write(itemlist)
 f.close()
