@@ -23,10 +23,10 @@ from datetime import date
 #--------------------------------------------
 def pluckId( str ):
 	# Split the hyperlink string using the delimiter '/'
-	parts = str.split('/')
-	id_part = parts[7]
-	str = id_part.replace('"}','')
-	return(str);
+    parts = str.split('/')
+    id_part = parts[7]
+    str = id_part.replace('"}','')
+    return(str);
 
 #--------------------------------------------
 # Read config file
@@ -82,52 +82,56 @@ items_url = SIERRA_API_HOST + ITEMS_URI
 #------------------------------------------------
 
 with open(sys.argv[1]) as f:
-	link_file_contents = json.load(f)
+    link_file_contents = json.load(f)
 
 for hyperlink in link_file_contents['entries']:
 
 	#-------------------------------------
 	# Reduce hyperlink to the itemid alone
 	#-------------------------------------
-	itemid = pluckId(hyperlink['link'])
+    itemid = pluckId(hyperlink['link'])
 
 	#--------------------------------------------------
 	# Pass the itemid to the API call to get a barcode
 	#--------------------------------------------------
 
-	payload = {'id': itemid, 'fields': 'barcode'}
-	items_response = requests.get(items_url, headers = request_headers, params = payload)
+    payload = {'id': itemid, 'fields': 'barcode'}
+    items_response = requests.get(items_url, headers = request_headers, params = payload)
 	
 	#--------------------------------------------------
 	# Convert the API's JSON response to Python 
 	#--------------------------------------------------
 	
-	responseStr = (json.dumps(items_response.json(), indent =2))
-	responseData= json.loads(responseStr)
+    responseStr = (json.dumps(items_response.json(), indent =2))
+    responseData= json.loads(responseStr)
 	
 	#-------------------------------------------------------------------
 	# For the AM request, retrieve and save ALL request barcodes
 	#-------------------------------------------------------------------
-	if sys.argv[2] == "AM":
-		with open(morningFile,'a') as f:
-			for holdrequest in responseData['entries']:
+    if sys.argv[2] == "AM":
+        with open(morningFile,'a') as f:
+            for holdrequest in responseData['entries']:
 				# APPEND TO STRING OF BARCODES
-				f.write(holdrequest['barcode'] + "\n")
-	else:
+                f.write(holdrequest['barcode'] + "\n")
+    else:
 		#-------------------------------------------------------------------
 		# For the PM request, retrieve and save unmatched request barcodes
-		# from the AM processing
+		# from the AM processing file. Since there may not have been any
+        # requests in the AM, test test for IOError and if caught, use a
+        # dummy value for comparisons.
 		#-------------------------------------------------------------------
 		
-		with open(morningFile,'r') as m:
-			AMbarcodes = m.read()
-			for holdrequest in responseData['entries']:
-				if holdrequest['barcode'] in AMbarcodes:
-					# print ("Found barcode from AM. Skipping: "+holdrequest['barcode'])
-					found_duplicate = 'yep'
-				else:
-					with open(eveningFile,'a') as f:
-						# print ("Found new barcode. Saving in PM group: "+holdrequest['barcode'])
-						f.write(holdrequest['barcode'] + "\n")
+        try:
+            with open(morningFile,'r') as m:
+                AMbarcodes = m.read()
+        except IOError:
+                AMbarcodes = '00000007000000'
+        for holdrequest in responseData['entries']:
+            if holdrequest['barcode'] not in AMbarcodes:
+                with open(eveningFile,'a') as f:
+				# print ("Found new barcode. Saving in PM group: "+holdrequest['barcode'])
+                    f.write(holdrequest['barcode'] + "\n")
+
+        ## -- end of PM section --##
 
 print("Done ")
